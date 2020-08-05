@@ -1,5 +1,7 @@
-
+*.h5
 *.pyc
 demo-Copy1.ipynb
 .ipynb_checkpoints/demo-checkpoint.ipynb
 .ipynb_checkpoints/demo-Copy1-checkpoint.ipynb
+/models/verifier/face_evoLVe_ir50/
+/models/verifier/insightface/
