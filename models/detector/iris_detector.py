@@ -30,7 +30,7 @@ class IrisDetector():
             output_eye_landmarks: list of eye landmarks having shape (2, 18, 2) with ordering (L/R, landmarks, x/y).
         """
             
-        if landmarks == None:
+        if landmarks is None:
             try:    
                 faces, landmarks = self.detector.detect_face(im, with_landmarks=True)     
             except:
@@ -42,17 +42,19 @@ class IrisDetector():
         for lm in landmarks:
             left_eye_im, left_x0y0 = self.get_eye_roi(im, lm[left_eye_idx])
             right_eye_im, right_x0y0 = self.get_eye_roi(im, lm[right_eye_idx])
-            inp_left = self.preprocess_eye_im(left_eye_im)
-            inp_right = self.preprocess_eye_im(right_eye_im)
+
+            if left_eye_im.size > 0 and right_eye_im.size > 0:
+                inp_left = self.preprocess_eye_im(left_eye_im)
+                inp_right = self.preprocess_eye_im(right_eye_im)
             
-            input_array = np.concatenate([inp_left, inp_right], axis=0)            
-            pred_left, pred_right = self.elg.net.predict(input_array)
-            
-            lms_left = self.elg._calculate_landmarks(pred_left, eye_roi=left_eye_im)
-            lms_right = self.elg._calculate_landmarks(pred_right, eye_roi=right_eye_im)
-            eye_landmarks = np.concatenate([lms_left, lms_right], axis=0)
-            eye_landmarks = eye_landmarks + np.array([left_x0y0, right_x0y0]).reshape(2,1,2)
-            output_eye_landmarks.append(eye_landmarks)
+                input_array = np.concatenate([inp_left, inp_right], axis=0)
+                pred_left, pred_right = self.elg.net.predict(input_array)
+
+                lms_left = self.elg._calculate_landmarks(pred_left, eye_roi=left_eye_im)
+                lms_right = self.elg._calculate_landmarks(pred_right, eye_roi=right_eye_im)
+                eye_landmarks = np.concatenate([lms_left, lms_right], axis=0)
+                eye_landmarks = eye_landmarks + np.array([left_x0y0, right_x0y0]).reshape(2,1,2)
+                output_eye_landmarks.append(eye_landmarks)
         return output_eye_landmarks
     
     @staticmethod

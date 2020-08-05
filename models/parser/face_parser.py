@@ -28,7 +28,7 @@ class FaceParser():
         orig_h, orig_w = im.shape[:2]
         
         # Detect/Crop face RoI
-        if bounding_box == None:
+        if bounding_box is None:
             if with_detection:
                 try:
                     self.detector.fd
@@ -74,4 +74,4 @@ class FaceParser():
     @staticmethod
     def normalize_input(x, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
         # x should be RGB with range [0, 255]
-        return ((x / 255) - mean)  / std
+        return ((x / 255) - mean) / std
